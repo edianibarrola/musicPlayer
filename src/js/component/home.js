@@ -1,5 +1,6 @@
 import React from "react";
 import { SongListMaker } from "./SongListMaker";
+import PropTypes from "prop-types";
 //include images into your bundle
 import rigoImage from "../../img/rigo-baby.jpg";
 
@@ -7,7 +8,7 @@ import rigoImage from "../../img/rigo-baby.jpg";
 export class Home extends React.Component {
 	constructor(props) {
 		super(props);
-		this.player = null;
+
 		this.state = {
 			currentSong: 0,
 
@@ -35,7 +36,32 @@ export class Home extends React.Component {
 				}
 			]
 		};
+		this.player = null;
 	}
+
+	StartPlay(index) {
+		this.state.songList[index].url.play();
+		//console.log(this.state.songList[this.state.currentSong].url);
+	}
+	PausePlay() {
+		this.state.songList[this.state.currentSong].url.pause();
+	}
+	SongForward = () => {
+		this.setState({
+			currentSong:
+				this.state.songList[this.state.currentSong].url == 2
+					? this.state.songList[this.state.currentSong].url
+					: 0
+		});
+	};
+	SongBack = () => {
+		this.setState({
+			currentSong:
+				this.state.songList[this.state.currentSong].url < 2
+					? this.state.songList[this.state.currentSong].url
+					: +1
+		});
+	};
 	render() {
 		return (
 			<div className="text-center mt-5">
@@ -53,10 +79,10 @@ export class Home extends React.Component {
 					<a>
 						<i className="fas fa-caret-square-left" />
 					</a>
-					<a>
+					<a onClick={() => this.StartPlay(this.state.currentSong)}>
 						<i className="fas fa-play" />
 					</a>
-					<a>
+					<a onClick={() => this.PausePlay}>
 						<i className="fas fa-pause-circle" />
 					</a>
 					<a>
@@ -64,7 +90,7 @@ export class Home extends React.Component {
 					</a>
 				</div>
 				<audio
-					src={this.state.songList[1].url}
+					src={this.state.songList[this.state.currentSong].url}
 					ref={el => (this.player = el)}
 				/>
 			</div>
