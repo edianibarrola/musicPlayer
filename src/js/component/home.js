@@ -90,7 +90,7 @@ export class Home extends React.Component {
 					</a>
 				</div>
 				<audio
-					src={this.state.songList[this.state.currentSong].url}
+					src={this.state.currentSong.url}
 					ref={el => (this.player = el)}
 				/>
 			</div>
