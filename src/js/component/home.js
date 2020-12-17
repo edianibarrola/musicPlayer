@@ -39,53 +39,67 @@ export class Home extends React.Component {
 		this.player = null;
 	}
 
-	StartPlay(index) {
-		this.state.songList[index].url.play();
-		//console.log(this.state.songList[this.state.currentSong].url);
+	componentDidMount() {
+		this.pauseButton.style.display = "none";
 	}
-	PausePlay() {
-		this.state.songList[this.state.currentSong].url.pause();
+
+	startPlay(index) {
+		var ind = index;
+		this.player.src = this.state.songList[ind].url;
+		this.player.play();
+		this.pauseButton.style.display = "inline";
+		this.playButton.style.display = "none";
+		console.log(ind);
 	}
-	SongForward = () => {
-		this.setState({
-			currentSong:
-				this.state.songList[this.state.currentSong].url == 2
-					? this.state.songList[this.state.currentSong].url
-					: 0
-		});
-	};
-	SongBack = () => {
-		this.setState({
-			currentSong:
-				this.state.songList[this.state.currentSong].url < 2
-					? this.state.songList[this.state.currentSong].url
-					: +1
-		});
-	};
+	pausePlay() {
+		this.player.pause();
+		this.pauseButton.style.display = "none";
+		this.playButton.style.display = "inline";
+	}
+	nextSong(index) {
+		if (index > this.state.songList.length) {
+			index = 0;
+		}
+		if (index < 0) {
+			index = this.state.songList.length;
+		}
+		this.setState.songList[this.state.currentSong] = index;
+		this.startPlay(this.state.currentSong);
+	}
+
 	render() {
 		return (
-			<div className="text-center mt-5">
-				<h1>Hello Rigo!</h1>
-				<p>
-					<img src={rigoImage} />
-				</p>
-				<ol>
+			<div className="text-center col-6 mx-auto mt-5 bg-dark">
+				<h1>Annoying Music Player</h1>
+
+				<ol className="col-4 mx-auto light ">
 					<SongListMaker
 						propCurrentSong={this.state.currentSong}
 						propSongList={this.state.songList}
+						propStartPlay={this.startPlay}
 					/>
 				</ol>
-				<div>
-					<a>
+				<div className=" col-3 mx-auto d-flex justify-content-around">
+					<a
+						onClick={() =>
+							this.nextSong(this.state.currentSong - 1)
+						}>
 						<i className="fas fa-caret-square-left" />
 					</a>
-					<a onClick={() => this.StartPlay(this.state.currentSong)}>
+					<a
+						ref={el => (this.playButton = el)}
+						onClick={() => this.startPlay(this.state.currentSong)}>
 						<i className="fas fa-play" />
 					</a>
-					<a onClick={() => this.PausePlay}>
+					<a
+						ref={el => (this.pauseButton = el)}
+						onClick={() => this.pausePlay()}>
 						<i className="fas fa-pause-circle" />
 					</a>
-					<a>
+					<a
+						onClick={() =>
+							this.nextSong(this.state.currentSong + 1)
+						}>
 						<i className="fas fa-caret-square-right" />
 					</a>
 				</div>
