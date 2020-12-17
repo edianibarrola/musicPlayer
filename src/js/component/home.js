@@ -11,7 +11,6 @@ export class Home extends React.Component {
 
 		this.state = {
 			currentSong: 0,
-
 			songList: [
 				{
 					title: "South Park",
@@ -44,27 +43,23 @@ export class Home extends React.Component {
 	}
 
 	startPlay(index) {
-		var ind = index;
-		this.player.src = this.state.songList[ind].url;
+		if (index >= this.state.songList.length) {
+			index = 0;
+		}
+		if (index < 0) {
+			index = this.state.songList.length - 1;
+		}
+		this.player.src = this.state.songList[index].url;
 		this.player.play();
 		this.pauseButton.style.display = "inline";
 		this.playButton.style.display = "none";
-		console.log(ind);
+
+		this.setState({ currentSong: index });
 	}
 	pausePlay() {
 		this.player.pause();
 		this.pauseButton.style.display = "none";
 		this.playButton.style.display = "inline";
-	}
-	nextSong(index) {
-		if (index > this.state.songList.length) {
-			index = 0;
-		}
-		if (index < 0) {
-			index = this.state.songList.length;
-		}
-		this.setState.songList[this.state.currentSong] = index;
-		this.startPlay(this.state.currentSong);
 	}
 
 	render() {
@@ -73,16 +68,23 @@ export class Home extends React.Component {
 				<h1>Annoying Music Player</h1>
 
 				<ol className="col-4 mx-auto light ">
-					<SongListMaker
-						propCurrentSong={this.state.currentSong}
-						propSongList={this.state.songList}
-						propStartPlay={this.startPlay}
-					/>
+					{this.state.songList.map((song, index) => {
+						return (
+							<li
+								key={index}
+								onClick={() => this.startPlay(index)}>
+								<span className="fa-li">
+									<i className="fas fa-music" />
+								</span>
+								{song.title}
+							</li>
+						);
+					})}
 				</ol>
 				<div className=" col-3 mx-auto d-flex justify-content-around">
 					<a
 						onClick={() =>
-							this.nextSong(this.state.currentSong - 1)
+							this.startPlay(this.state.currentSong - 1)
 						}>
 						<i className="fas fa-caret-square-left" />
 					</a>
@@ -98,7 +100,7 @@ export class Home extends React.Component {
 					</a>
 					<a
 						onClick={() =>
-							this.nextSong(this.state.currentSong + 1)
+							this.startPlay(this.state.currentSong + 1)
 						}>
 						<i className="fas fa-caret-square-right" />
 					</a>
@@ -114,3 +116,9 @@ export class Home extends React.Component {
 
 //use short html audiotag <audio>
 //use audio/video dom play and pause (make functions)
+
+// <SongListMaker
+// 								propCurrentSong={this.state.currentSong}
+// 								propSongList={this.state.songList}
+// 								propStartPlay={this.startPlay}
+// 							/>

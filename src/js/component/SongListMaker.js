@@ -5,8 +5,7 @@ export class SongListMaker extends React.Component {
 	render() {
 		return this.props.propSongList.map((song, index) => {
 			return (
-				<li onClick={() => this.props.propStartPlay(index)} key={index}>
-					{" "}
+				<li key={index} onClick={() => this.props.propStartPlay(0)}>
 					{song.title}
 				</li>
 			);
