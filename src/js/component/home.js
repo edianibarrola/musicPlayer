@@ -73,6 +73,7 @@ export class Home extends React.Component {
 		this.playButton.style.display = "none";
 
 		this.setState({ currentSong: index });
+		console.log(index);
 	}
 	pausePlay() {
 		this.player.pause();

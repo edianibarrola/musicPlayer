@@ -15,3 +15,10 @@ body {
     color:white;
     background-color: slategrey;
 }
+ol {
+    list-style-type: none;
+    
+}
+li:nth-child(even) {
+   background-color: gray;
+}
