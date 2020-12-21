@@ -10,36 +10,52 @@ export class Home extends React.Component {
 		super(props);
 
 		this.state = {
-			currentSong: 0,
-			songList: [
-				{
-					title: "South Park",
-					id: "south-park",
-					author: "Kyle",
-					url:
-						"https://assets.breatheco.de/apis/sound/files/cartoons/songs/south-park.mp3"
-				},
-				{
-					title: "Thunder Cats",
-					id: "thundercats",
-					author: "Moonra",
-					url:
-						"https://assets.breatheco.de/apis/sound/files/cartoons/songs/thundercats.mp3"
-				},
-				{
-					title: "X-Men",
-					id: "x-men",
-					author: "Profesor",
-					url:
-						"https://assets.breatheco.de/apis/sound/files/cartoons/songs/x-men.mp3"
-				}
-			]
+			songList: [],
+			currentSong: 0
+
+			// songList: [
+			// 	{
+			// 		title: "South Park",
+			// 		id: "south-park",
+			// 		author: "Kyle",
+			// 		url:
+			// 			"https://assets.breatheco.de/apis/sound/files/cartoons/songs/south-park.mp3"
+			// 	},
+			// 	{
+			// 		title: "Thunder Cats",
+			// 		id: "thundercats",
+			// 		author: "Moonra",
+			// 		url:
+			// 			"https://assets.breatheco.de/apis/sound/files/cartoons/songs/thundercats.mp3"
+			// 	},
+			// 	{
+			// 		title: "X-Men",
+			// 		id: "x-men",
+			// 		author: "Profesor",
+			// 		url:
+			// 			"https://assets.breatheco.de/apis/sound/files/cartoons/songs/x-men.mp3"
+			// 	}
+			// ]
 		};
+		this.url = "https://assets.breatheco.de/apis/sound/songs";
 		this.player = null;
 	}
 
 	componentDidMount() {
 		this.pauseButton.style.display = "none";
+		fetch(this.url)
+			.then(function(response) {
+				if (!response.ok) {
+					throw Error(response.statusText);
+				}
+				return response.json();
+			})
+			.then(jsonifiedResponse =>
+				this.setState({ songList: jsonifiedResponse })
+			)
+			.catch(function(error) {
+				console.log("Looks like there was a problem: \n", error);
+			});
 	}
 
 	startPlay(index) {
@@ -49,7 +65,9 @@ export class Home extends React.Component {
 		if (index < 0) {
 			index = this.state.songList.length - 1;
 		}
-		this.player.src = this.state.songList[index].url;
+		this.player.src =
+			"https://assets.breatheco.de/apis/sound/" +
+			this.state.songList[index].url;
 		this.player.play();
 		this.pauseButton.style.display = "inline";
 		this.playButton.style.display = "none";
@@ -76,7 +94,7 @@ export class Home extends React.Component {
 								<span className="fa-li">
 									<i className="fas fa-music" />
 								</span>
-								{song.title}
+								{song.name}
 							</li>
 						);
 					})}
